@@ -1,6 +1,6 @@
 # .github/workflows/keep-alive.yml
 
-name: Keep Service Alive
+name: Request Gemini Service
 
 on:
   # 触发器 1: 定时触发
