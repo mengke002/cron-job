@@ -35,8 +35,8 @@ jobs:
       # 第四个请求：调用 models API (使用 Secret)
       - name: Send GET request to the models endpoint
         env:
-          API_KEY: ${{ secrets.RENDER_API_KEY }}
+          AI_API_KEY: ${{ secrets.ONE_API_KEY }}
         run: |
           curl -X GET --fail "https://one-api-6w3d.onrender.com/v1/models" \
-            -H "Authorization: Bearer $ONE_API_KEY" \
+            -H "Authorization: Bearer $AI_API_KEY" \
             -H "Content-Type: application/json" || exit 0
