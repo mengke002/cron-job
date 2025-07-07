@@ -1,14 +1,10 @@
 # .github/workflows/keep-alive.yml
 
-name: Request Gemini Service
+name: Request Render Service
 
 on:
-  # 触发器 1: 定时触发
   schedule:
-    # 每 5 分钟运行一次
     - cron: '*/5 * * * *'
-  
-  # 触发器 2: 手动触发 (在 Actions 页面会有一个 'Run workflow' 按钮)
   workflow_dispatch:
 
 jobs:
@@ -17,26 +13,36 @@ jobs:
     steps:
       # 第一个请求：保持服务唤醒
       - name: Send GET request to the gemini balance service
-        run: curl --fail https://gemini-balance-wlqs.onrender.com || exit 0
+        run: |
+          curl --location --max-time 60 \
+            --user-agent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36" \
+            --fail https://gemini-balance-wlqs.onrender.com || exit 0
 
       # 第二个请求：保持服务唤醒
       - name: Send GET request to the one api service
-        run: curl --fail https://one-api-6w3d.onrender.com  || exit 0
+        run: |
+          curl --location --max-time 60 \
+            --user-agent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36" \
+            --fail https://one-api-6w3d.onrender.com || exit 0
 
       # 第三个请求：调用 models API (使用 Secret)
-      - name: Send GET request to the models endpoint
+      - name: Send GET request to the models endpoint (gemini)
         env:
           API_KEY: ${{ secrets.RENDER_API_KEY }}
         run: |
-          curl -X GET --fail "https://gemini-balance-wlqs.onrender.com/v1/models" \
+          curl -X GET --location --max-time 60 \
+            --user-agent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36" \
+            --fail "https://gemini-balance-wlqs.onrender.com/v1/models" \
             -H "Authorization: Bearer $API_KEY" \
             -H "Content-Type: application/json" || exit 0
 
       # 第四个请求：调用 models API (使用 Secret)
-      - name: Send GET request to the models endpoint
+      - name: Send GET request to the models endpoint (one-api)
         env:
           AI_API_KEY: ${{ secrets.ONE_API_KEY }}
         run: |
-          curl -X GET --fail "https://one-api-6w3d.onrender.com/v1/models" \
+          curl -X GET --location --max-time 60 \
+            --user-agent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36" \
+            --fail "https://one-api-6w3d.onrender.com/v1/models" \
             -H "Authorization: Bearer $AI_API_KEY" \
             -H "Content-Type: application/json" || exit 0
