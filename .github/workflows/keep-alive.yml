@@ -46,3 +46,10 @@ jobs:
             --fail "https://one-api-6w3d.onrender.com/v1/models" \
             -H "Authorization: Bearer $AI_API_KEY" \
             -H "Content-Type: application/json" || exit 0
+
+      # 第5个请求：保持服务唤醒
+      - name: Send GET request to the one api service
+        run: |
+          curl --location --max-time 60 \
+            --user-agent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36" \
+            --fail https://new-api-latest-qqi6.onrender.com || exit 0
